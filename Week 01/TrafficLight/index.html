@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TicTacToe</title>
+    <style>
+      .frame {
+        width: 200px;
+        height: 50px;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        background-color: gray;
+        border: 2px solid black;
+      }
+
+      .light {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background-color: black;
+      }
+
+      .lights_on.red {
+        background-color: red;
+      }
+
+      .lights_on.yellow {
+        background-color: yellow;
+      }
+
+      .lights_on.green {
+        background-color: green;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="frame">
+      <div class="light red"></div>
+      <div class="light yellow"></div>
+      <div class="light green"></div>
+    </div>
+  </body>
+  <script>
+    // 通过一种数据结构表示每个灯泡之间的顺序关系
+    const orderLists = [
+      {
+        name: "green",
+        // timmer: 1
+        timmer: 10,
+      },
+      {
+        name: "yellow",
+        // timmer: 1
+        timmer: 2,
+      },
+      {
+        name: "red",
+        // timmer: 1
+        timmer: 5,
+      },
+    ];
+
+    const toggleLight = (ele) => {
+      return ele.classList.toggle("lights_on");
+    };
+
+    const switchLights = (order) => {
+      turnAllOff();
+      toggleLight(document.querySelector(`.${order.name}`));
+    };
+
+    const startCircle = () => {
+      switchLights(orderLists[0]);
+
+      setTimeout(function () {
+        switchLights(orderLists[1]);
+        setTimeout(function () {
+          switchLights(orderLists[2]);
+          setTimeout(function () {
+            startCircle();
+          }, orderLists[2].timmer * 1000);
+        }, orderLists[1].timmer * 1000);
+      }, orderLists[0].timmer * 1000);
+    };
+
+    const turnAllOff = () => {
+      for (const order of orderLists) {
+        document.querySelector(`.${order.name}`).classList.remove("lights_on");
+      }
+    };
+
+    startCircle();
+  </script>
+</html>
