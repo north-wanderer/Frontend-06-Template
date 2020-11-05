@@ -81,7 +81,7 @@
       let queue = [start] // breadth first search
 
       function insert(x, y) {
-        // if current point is byond border
+        // if current point is beyond border
         if (x < 0 || x >= 100 || y < 0 || y >= 100) return
         // if current point is part of barrier or been searched, aka 1 or 2
         if (barrier[100 * y + x]) return
