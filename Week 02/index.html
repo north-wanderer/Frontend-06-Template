@@ -22,12 +22,20 @@
       margin: 0 auto;
       font-size: 0;
     }
+
+    .options {
+      margin: 20px auto;
+      text-align: center;
+    }
   </style>
 </head>
 
 <body>
   <div id="container"></div>
-  <button onclick="saveMap()">save barrier</button>
+  <div class="options">
+    <button onclick="saveMap()">save barrier</button>
+    <button onclick="search()">start search</button>
+  </div>
   <script>
     let barrier = localStorage['barrier'] ? JSON.parse(localStorage['barrier']) : Array(10000).fill(0)
 
@@ -77,14 +85,23 @@
       e.preventDefault()
     })
 
-    function findValidPath(barrier, start, end) {
+    function sleep(t) {
+      return new Promise(function (resolve) {
+        setTimeout(resolve, t);
+      })
+    }
+
+    async function findValidPath(barrier, start, end) {
       let queue = [start] // breadth first search
 
-      function insert(x, y) {
+      async function insert(x, y) {
         // if current point is beyond border
         if (x < 0 || x >= 100 || y < 0 || y >= 100) return
         // if current point is part of barrier or been searched, aka 1 or 2
         if (barrier[100 * y + x]) return
+
+        await sleep(1) // uncomment this line if you are impatient like me 
+        container.children[100 * y + x].style.backgroundColor = 'yellow'
         // map element status: 0 -> empty; 1 -> barrier; 2 -> point of potential path
         barrier[100 * y + x] = 2
         queue.push([x, y])
@@ -94,14 +111,23 @@
       while (queue.length) {
         let [x, y] = queue.shift()
         console.log('  [x, y] :>> ', x, y)
-        if (x === end[0] && y === end[1]) return true
 
-        insert(x, y - 1) // up
-        insert(x, y + 1) // down
-        insert(x - 1, y) // left
-        insert(x + 1, y) // right
+        if (x === end[0] && y === end[1]) {
+          // label end point
+          container.children[100 * end[1] + end[0]].style.backgroundColor = 'red'
+          console.log('catch you! there is a possible path between two points.')
+        }
+
+        await insert(x, y - 1) // up
+        await insert(x, y + 1) // down
+        await insert(x - 1, y) // left
+        await insert(x + 1, y) // right
       }
       return false
+    }
+
+    function search() {
+      findValidPath(barrier, [0, 0], [50, 50])
     }
   </script>
 </body>
