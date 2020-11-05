@@ -27,12 +27,12 @@
 
 <body>
   <div id="container"></div>
-  <button onclick="saveMap()">save map</button>
+  <button onclick="saveMap()">save barrier</button>
   <script>
-    let map = localStorage['map'] ? JSON.parse(localStorage['map']) : Array(10000).fill(0)
+    let barrier = localStorage['barrier'] ? JSON.parse(localStorage['barrier']) : Array(10000).fill(0)
 
     function saveMap() {
-      localStorage['map'] = JSON.stringify(map)
+      localStorage['barrier'] = JSON.stringify(barrier)
     }
 
     let container = document.querySelector('#container')
@@ -42,16 +42,16 @@
         let cell = document.createElement('div')
         cell.classList.add('cell')
 
-        if (map[100 * y + x] === 1) cell.style.backgroundColor = 'black'
+        if (barrier[100 * y + x] === 1) cell.style.backgroundColor = 'black'
 
         cell.addEventListener('mousemove', () => {
           if (mousedown) {
             if (clear) {
               cell.style.backgroundColor = ''
-              map[100 * y + x] = 0
+              barrier[100 * y + x] = 0
             } else {
               cell.style.backgroundColor = 'black'
-              map[100 * y + x] = 1
+              barrier[100 * y + x] = 1
             }
           }
         })
@@ -77,6 +77,32 @@
       e.preventDefault()
     })
 
+    function findValidPath(barrier, start, end) {
+      let queue = [start] // breadth first search
+
+      function insert(x, y) {
+        // if current point is byond border
+        if (x < 0 || x >= 100 || y < 0 || y >= 100) return
+        // if current point is part of barrier or been searched, aka 1 or 2
+        if (barrier[100 * y + x]) return
+        // map element status: 0 -> empty; 1 -> barrier; 2 -> point of potential path
+        barrier[100 * y + x] = 2
+        queue.push([x, y])
+      }
+
+      console.log('current point:')
+      while (queue.length) {
+        let [x, y] = queue.shift()
+        console.log('  [x, y] :>> ', x, y)
+        if (x === end[0] && y === end[1]) return true
+
+        insert(x, y - 1) // up
+        insert(x, y + 1) // down
+        insert(x - 1, y) // left
+        insert(x + 1, y) // right
+      }
+      return false
+    }
   </script>
 </body>
 
