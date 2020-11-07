@@ -107,6 +107,10 @@
             minIndex = i
           }
         }
+
+        this.data[minIndex] = this.data[this.data.length -1]
+        this.data.pop()
+        return min
       }
 
       give(v) {
