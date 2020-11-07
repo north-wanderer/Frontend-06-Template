@@ -96,7 +96,7 @@
         this.compare = compare || ((a, b) => a - b)
       }
 
-      take() {
+      take() { // A* search algorithm
         if (!this.data.length) return
         let min = this.data[0],
           minIndex = 0
@@ -119,8 +119,12 @@
     }
 
     async function findValidPath(barrier, start, end) {
-      let queue = [start] // breadth first search
+      let queue = new Sorted([start], (a, b) => distance(a) - distance(b)) 
       let table = Object.create(barrier)
+
+      function distance(point) {
+        return (point[0] - end[0]) ** 2 + (point[1] - end[1]) ** 2
+      }
 
       async function insert(x, y, pre) {
         // if current point is beyond border
@@ -132,12 +136,12 @@
         container.children[100 * y + x].style.backgroundColor = 'yellow'
         // map element status: 0 -> empty; 1 -> barrier; 2 -> point of potential path
         table[100 * y + x] = pre
-        queue.push([x, y])
+        queue.give([x, y])
       }
 
       console.log('current point:')
-      while (queue.length) {
-        let [x, y] = queue.shift()
+      while (queue.data.length) {
+        let [x, y] = queue.take() // take the point with minimum distance to endpoint from potentials
         console.log('  [x, y] :>> ', x, y)
 
         if (x === end[0] && y === end[1]) {
