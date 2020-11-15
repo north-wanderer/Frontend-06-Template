@@ -38,7 +38,57 @@ function * tokenize (source) {
   }
 }
 
-// test
-for (const token of tokenize('1024 - 10 * 25')) {
-  console.log(token)
+const source = []
+
+function MultiplicativeExp(source) {
+  if (source[0].type === 'Number') {
+    const node = {
+      type: 'MultiplicativeExpression',
+      children: [source[0]]
+    }
+
+    source[0] = node
+    return MultiplicativeExp(source)
+  }
+
+  if (source[0].type === 'MultiplicativeExpression' && source[1] && source[1].type === '*') {
+    const node = {
+      type: 'MultiplicativeExpression',
+      operator: '*',
+      children: []
+    }
+
+    node.children.push(source.shift())
+    node.children.push(source.shift())
+    node.children.push(source.shift())
+
+    source.unshift(node)
+    return MultiplicativeExp(source)
+  }
+  if (source[0].type === 'MultiplicativeExpression' && source[1] && source[1].type === '/') {
+    const node = {
+      type: 'MultiplicativeExpression',
+      operator: '/',
+      children: []
+    }
+
+    node.children.push(source.shift())
+    node.children.push(source.shift())
+    node.children.push(source.shift())
+
+    source.unshift(node)
+    return MultiplicativeExp(source)
+  }
+  if (source[0].type === 'MultiplicativeExpression') return source[0]
+
+  return MultiplicativeExp(source)
 }
+
+// test
+for (const token of tokenize('10 * 25 / 2')) {
+  if (token.type !== 'Whitespace' && token.type !== 'LineTerminator') {
+    source.push(token)
+  }
+}
+
+console.log(MultiplicativeExp(source))
