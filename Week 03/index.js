@@ -40,6 +40,64 @@ function * tokenize (source) {
 
 const source = []
 
+function Expression(tokens) {
+  if (source[0].type === 'AdditiveExpression' && source[1] && source[1].type === 'EOF') {
+    const node = {
+      type: 'Expression',
+      children: [source.shift(), source.shift()]
+    }
+    source.unshift(node)
+    return node
+  }
+
+  AdditiveExp(source)
+  return Expression(source)
+}
+
+function AdditiveExp(source) {
+  if (source[0].type === 'MultiplicativeExpression') {
+    const node = {
+      type: 'AdditiveExpression',
+      children: [source[0]]
+    }
+    source[0] = node
+    return AdditiveExp(source)
+  }
+
+  if (source[0].type === 'AdditiveExpression' && source[1] && source[1].type === '+') {
+    const node = {
+      type: 'AdditiveExpression',
+      operator: '+',
+      children: []
+    }
+    node.children.push(source.shift())
+    node.children.push(source.shift())
+    MultiplicativeExp(source)
+    node.children.push(source.shift())
+    source.unshift(node)
+    return AdditiveExp(source)
+  }
+
+  if (source[0].type === 'AdditiveExpression' && source[1] && source[1].type === '-') {
+    const node = {
+      type: 'AdditiveExpression',
+      operator: '/',
+      children: []
+    }
+    node.children.push(source.shift())
+    node.children.push(source.shift())
+    MultiplicativeExp(source)
+    node.children.push(source.shift())
+    source.unshift(node)
+    return AdditiveExp(source)
+  }
+
+  if (source[0].type === 'AdditiveExpression') return source[0]
+
+  MultiplicativeExp(source)
+  return AdditiveExp(source)
+}
+
 function MultiplicativeExp(source) {
   if (source[0].type === 'Number') {
     const node = {
@@ -85,10 +143,10 @@ function MultiplicativeExp(source) {
 }
 
 // test
-for (const token of tokenize('10 * 25 / 2')) {
+for (const token of tokenize('1 + 2 + 3')) {
   if (token.type !== 'Whitespace' && token.type !== 'LineTerminator') {
     source.push(token)
   }
 }
 
-console.log(MultiplicativeExp(source))
+console.log(Expression(source))
