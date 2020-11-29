@@ -7,6 +7,7 @@
   <title>Document</title>
   <style>
     #draggable {
+      display: inline-block;
       width: 100px;
       height: 100px;
       background-color: aqua;
@@ -15,6 +16,18 @@
 </head>
 
 <body>
+  <div id="container">
+    文字 文字 文字 文字 文字 文字 文字 文字 文字 文字
+    文字 文字 文字 文字 文字 文字 文字 文字 文字 文字
+    文字 文字 文字 文字 文字 文字 文字 文字 文字 文字
+    文字 文字 文字 文字 文字 文字 文字 文字 文字 文字
+    文字 文字 文字 文字 文字 文字 文字 文字 文字 文字
+    文字 文字 文字 文字 文字 文字 文字 文字 文字 文字
+    文字 文字 文字 文字 文字 文字 文字 文字 文字 文字
+    文字 文字 文字 文字 文字 文字 文字 文字 文字 文字
+    文字 文字 文字 文字 文字 文字 文字 文字 文字 文字
+    文字 文字 文字 文字 文字 文字 文字 文字 文字 文字
+  </div>
   <div id="draggable"></div>
   <script>
     let draggable = document.querySelector('#draggable')
@@ -30,13 +43,46 @@
       }
 
       function move(e) {
-        console.log('aaa');
-        draggable.style.transform = `translate(${baseX + e.clientX - startX}px, ${baseY + e.clientY - startY}px)`
+        let range = getNearest(e.clientX, e.clientY)
+        range.insertNode(draggable)
+        //draggable.style.transform = `translate(${baseX + e.clientX - startX}px, ${baseY + e.clientY - startY}px)`
       }
 
       document.addEventListener("mousemove", move)
       document.addEventListener("mouseup", up)
     })
+
+  let ranges = []
+
+  let container = document.querySelector('#container')
+
+  for (let i = 0; i < container.childNodes[0].textContent.length; i++) {
+    let range = document.createRange();
+    range.setStart(container.childNodes[0], i)
+    range.setEnd(container.childNodes[0], i)
+
+    console.log(range.getBoundingClientRect());
+    ranges.push(range)
+  }
+
+  function getNearest(x, y) {
+    let min = Infinity
+    let nearest = null
+
+    for (let range of ranges) {
+      let rect = range.getBoundingClientRect()
+      let distance = (rect.x - x) ** 2 + (rect.y - y) ** 2
+      if (distance < min) {
+        nearest = range
+        min = distance
+      }
+    }
+    return nearest
+  }
+
+  document.addEventListener('selectstart', function (e) {
+    e.preventDefault()
+  })
   </script>
 </body>
 
