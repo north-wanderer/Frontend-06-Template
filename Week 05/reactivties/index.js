@@ -47,14 +47,20 @@ function effect (fn) {
 
 // test below
 const obj = {
-  a: { b: 4 },
-  b: 2
+  r: 1,
+  g: 1,
+  b: 1
 }
 
 const po = reactive(obj)
 
+effect(() => { document.querySelector('#r').value = po.r })
+effect(() => { document.querySelector('#g').value = po.g })
+effect(() => { document.querySelector('#b').value = po.b })
 effect(() => {
-  console.log('effect begin')
-  console.log('deps with depth 1:', po.b)
-  console.log('deps with depth 2:', po.a.b)
+  document.querySelector('#color').style.backgroundColor = `rgb(${po.r},${po.g},${po.b})`
 })
+
+document.querySelector('#r').addEventListener('input', e => po.r = e.target.value)
+document.querySelector('#g').addEventListener('input', e => po.g = e.target.value)
+document.querySelector('#b').addEventListener('input', e => po.b = e.target.value)
