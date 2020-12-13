@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+  <script src="https://gw.alipayobjects.com/os/lib/antv/g6/3.7.1/dist/g6.min.js"></script>
+</head>
+
+<body>
+  <div id="container"></div>
+</body>
+
+<script>
+  const objects = [
+    'Array',
+    'String',
+    'Number',
+    'Boolean',
+    'Object',
+    'Function',
+    'Date',
+    'Symbol',
+    'RegExp',
+    'Promise',
+    'Set',
+    'Map',
+    'WeakMap',
+    'WeakSet',
+    'Proxy',
+    'eval',
+    'isFinite',
+    'isNaN',
+    'parseInt',
+    'parseFloat',
+    'Error',
+    'ArrayBuffer',
+    'JSON',
+    'Math'
+  ]
+
+  const realm = {
+    id: 'realm',
+    children: []
+  }
+
+  for (const o of objects) {
+    realm.children.push({
+      id: o,
+      children: []
+    })
+  }
+
+  const queue = [...realm.children]
+
+  while (queue.length) {
+    const realm = queue.shift()
+    for (const name of Object.getOwnPropertyNames(window[realm.id])) {
+      const child = {
+        id: `${realm.id}.${name}`
+      }
+      realm.children.push(child)
+    }
+  }
+
+  const container = document.querySelector('#container')
+  const width = container.scrollWidth
+  const height = container.scrollHeight || 1000
+
+  const graph = new G6.TreeGraph({
+    container: 'container',
+    width,
+    height,
+    modes: {
+      default: [
+        'drag-canvas',
+        'zoom-canvas'
+      ]
+    },
+    defaultNode: {
+      size: 10,
+      anchorPoints: [
+        [0, 0.5],
+        [1, 0.5]
+      ]
+    },
+    defaultEdge: {
+      type: 'cubic-horizontal'
+    },
+    layout: {
+      type: 'dendrogram',
+      direction: 'LR',
+      getId(d) {
+        return d.id
+      },
+      getHeight() {
+        return 16
+      },
+      getWidth() {
+        return 16
+      },
+      getVGap() {
+        return 10
+      },
+      getHGap() {
+        return 100
+      }
+    }
+  })
+
+  graph.node(function (node) {
+    return {
+      label: node.id,
+      labelCfg: {
+        offset: 10,
+        position:
+          node.children && node.children.length > 0 ? 'left' : 'right'
+      }
+    }
+  })
+
+  graph.data(realm)
+  graph.render()
+  graph.fitView()
+
+</script>
+
+</html>
