@@ -1,9 +1,94 @@
 /* eslint-disable no-empty */
+const css = require('css')
 let currentToken = null
 let currentAttribute = null
 let currentTextNode = null
+const rules = []// css rules
 
 const stack = [{ type: 'document', children: [] }]
+
+function addCSSRules (text) {
+  const ast = css.parse(text)
+  rules.push(...ast.stylesheet.rules)
+}
+
+function match (element, selector) {
+  // 没有属性的都是文本节点，需要计算css
+  if (!selector || !element.attributes) return false
+
+  if (selector.charAt(0) === '#') { // ID
+    const attr = element.attributes.filter(attr => attr.name === 'id')[0]
+    if (attr && attr.value === selector.replace('#', '')) return true
+  } else if (selector.charAt(0) === '.') { // Class
+    const attr = element.attributes.filter(attr => attr.name === 'class')[0]
+    if (attr && attr.value === selector.replace('.', '')) return true
+  } else { // tag name
+    if (element.tagName === selector) return true
+  }
+
+  return false
+}
+
+function specificity (selector) {
+  const p = [0, 0, 0, 0] // 四元组
+  const selectorParts = selector.split(' ')
+  for (const part of selectorParts) {
+    if (part.charAt(0) === '#') {
+      p[1] += 1
+    } else if (part.charAt(0) === '.') {
+      p[2] += 1
+    } else {
+      p[3] += 1
+    }
+  }
+  return p
+}
+
+function compare (sp1, sp2) {
+  if (sp1[0] - sp2[0]) { return sp1[0] - sp2[0] }
+
+  if (sp1[1] - sp2[1]) { return sp1[1] - sp2[1] }
+
+  if (sp1[2] - sp2[2]) { return sp1[2] - sp2[2] }
+
+  return sp1[3] - sp2[3]
+}
+
+function computeCSS (element) {
+  const elements = stack.slice().reverse()
+  if (!element.computedStyle) element.computedStyle = {}
+  for (const rule of rules) {
+    const selectorParts = rule.selectors[0].split(' ').reverse()
+    if (!match(element, selectorParts[0])) continue
+
+    let matched = false
+
+    let j = 1
+    for (let i = 0; i < elements.length; i++) {
+      if (match(elements[i], selectorParts[j])) j++
+    }
+    if (j >= selectorParts.length) matched = true
+
+    if (matched) {
+      const sp = specificity(rule.selectors[0])
+      const computedStyle = element.computedStyle
+      for (const declaration of rule.declarations) {
+        if (!computedStyle[declaration.property]) {
+          computedStyle[declaration.property] = {}
+        }
+        if (!computedStyle[declaration.property].specificity) {
+          computedStyle[declaration.property].value = declaration.value
+          computedStyle[declaration.property].specificity = sp
+        } else if (compare(computedStyle[declaration.property].specificity, sp) < 0) {
+          computedStyle[declaration.property].value = declaration.value
+          computedStyle[declaration.property].specificity = sp
+        }
+      }
+
+      console.log(element.computedStyle)
+    }
+  }
+}
 
 function emit (token) {
   // console.log(token)
@@ -29,15 +114,20 @@ function emit (token) {
         })
       }
     }
-
+    computeCSS(element)
     top.children.push(element)
     element.parent = top
     currentTextNode = null
-    if (!token.isSelfClosing) { stack.push(element) }
+    if (!token.isSelfClosing) {
+      stack.push(element)
+    }
   } else if (token.type === 'endTag') {
     if (top.tagName !== token.tagName) {
       throw new Error("Tag start end doesn't match!")
     } else {
+      if (top.tagName === 'style') {
+        addCSSRules(top.children[0].content)
+      }
       stack.pop() // 配对成功，把元素从栈里取出
     }
     currentTextNode = null
