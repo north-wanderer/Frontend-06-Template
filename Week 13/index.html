@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    let names = Object.getOwnPropertyNames(window)
+    const rules={
+      "ECMA 262：":["globalThis", "console", "BigInt", "BigInt64Array", "BigUint64Array", "Infinity", "NaN", "undefined", "eval", "isFinite", "isNaN", "parseFloat", "parseInt", "decodeURI", "decodeURIComponent", "encodeURI", "encodeURIComponent", "Array", "Date", "RegExp", "Promise", "Proxy", "Map", "WeakMap", "Set", "WeakSet", "Function", "Boolean", "String", "Number", "Symbol", "Object", "Error", "EvalError", "RangeError", "ReferenceError", "SyntaxError", "TypeError", "URIError", "ArrayBuffer", "SharedArrayBuffer", "DataView", "Float32Array", "Float64Array", "Int8Array", "Int16Array", "Int32Array", "Uint8Array", "Uint16Array", "Uint32Array", "Uint8ClampedArray", "Atomics", "JSON", "Math", "Reflect", "escape", "unescape"],
+      "Web Audio": ["BaseAudioContext","AudioContext","OfflineAudioContext","OfflineAudioCompletionEvent","AudioBuffer","AudioNode","AudioParam","AudioScheduledSourceNode","AnalyserNode","AudioBufferSourceNode","AudioDestinationNode","AudioListener","AudioProcessingEvent","BiquadFilterNode","ChannelMergerNode","ChannelSplitterNode","ConstantSourceNode","ConvolverNode","DelayNode","DynamicsCompressorNode","GainNode","IIRFilterNode","MediaElementAudioSourceNode","MediaStreamAudioDestinationNode","MediaStreamAudioSourceNode","MediaStreamTrackAudioSourceNode","OscillatorNode","PannerNode","PeriodicWave","ScriptProcessorNode","StereoPannerNode","WaveShaperNode","AudioWorklet","AudioParamMap","AudioWorkletNode"],
+      "XHR & Fetch": ["fetch","XMLHttpRequest","FormData","ProgressEvent","XMLHttpRequestEventTarget","XMLHttpRequestUpload", "AbortController","AbortSignal"],
+      "encoding API":["TextDecoder", "TextEncoder", "TextDecoderStream", "TextEncoderStream"],
+      "WebSocket": ["WebSocket","CloseEvent"],
+      "non-standard webkit API": e => e.toLowerCase().match(/^webkit/),
+      "Canvas": ["Path2D","ImageBitmap","ImageBitmapRenderingContext","OffscreenCanvas","InvalidStateError","DOMException","CanvasRenderingContext2D","2d","WebGLRenderingContext","WebGL2RenderingContext","Blob","SecurityError","CanvasUserInterface","CanvasRenderingContext2DSettings","CanvasFillRule","ImageSmoothingQuality","CanvasState","CanvasPathDrawingStyles","CanvasTextDrawingStyles","OffscreenCanvasRenderingContext2D","Window","Document","WorkerGlobalScope","FontFace","CanvasPath","IndexSizeError","CanvasDrawPath","CanvasTransform","DOMMatrix","DOMMatrix2DInit","CanvasDrawImage","CanvasFillStrokeStyles","CanvasImageSource","HTMLOrSVGImageElement","HTMLVideoElement","HTMLCanvasElement","ImageData","ImageBitMap","CanvasGradient","CanvasPattern","SyntaxError","CanvasRect","TextMetrics","CanvasText","Uint8ClampedArray","CanvasImageData","ArrayBuffer","RangeError","CanvasCompositing","CanvasImageSmoothing","CanvasShadowStyles","CanvasFilters","ImageBitmapRenderingContextSettings","EventTarget","ImageBitmapRenderingcontext","EncodingError","ImageBitmapSource"],
+      "Stream" : ["ReadableStream","ReadableStreamDefaultReader","ReadableStreamBYOBReader","ReadableStreamDefaultController","ReadableByteStreamController","ReadableStreamBYOBRequest","WritableStream","WritableStreamDefaultWriter","WritableStreamDefaultController","TransformStream","TransformStreamDefaultController","ByteLengthQueuingStrategy","CountQueuingStrategy"],
+      "URL": ["URL","URLSearchParams"],
+      "XPath": ["XPathResult","XPathExpression","XPathEvaluator"],
+      "SVG": e => e.match(/^SVG/),
+      "Indexed Database": e => e.match(/^IDB/),
+      "Performance Timeline": e => e.match(/^Performance/),
+      "StyleSheet": e => e.match(/^StyleSheet/),
+      "Web Work": ["WorkerGlobalScope","DedicatedWorkerGlobalScope","SharedWorkerGlobalScope","Worker","SharedWorker"],
+      "WebGL": e => e.match(/^WebGL/),
+      "WebRTC": e => e.match(/^RTC/),
+      "HTML:form": ["ValidityState","SubmitEvent","FormDataEvent"],
+      "HTML:media": ["HTMLVideoElement","HTMLAudioElement","HTMLTrackElement","HTMLMediaElement","MediaError","AudioTrackList","AudioTrack","VideoTrackList","VideoTrack","TextTrackList","TextTrack","TextTrackCueList","TextTrackCue","TimeRanges","TrackEvent"],
+      "DOM" : e => e.match(/^DOM/),
+      "DOM:Element Interface" : e => e.match(/^HTML/),
+      "DOM:subclass of node" : e => window[e]?.prototype instanceof Node || e === "Node",
+      "DOM:the rest": ["NodeList","HTMLCollection","MutationObserver","MutationRecord","Node","Document","XMLDocument","DocumentType","DocumentFragment","ShadowRoot","Element","NamedNodeMap","Attr","CharacterData","Text","CDATASection","ProcessingInstruction","Comment","AbstractRange","StaticRange","Range","NodeIterator","TreeWalker","NodeFilter"],
+      "DOM:event handler" : e => e.match(/^on/),
+      "DOM:event interface": ["Event","CustomEvent","EventTarget","UIEvent","FocusEvent","MouseEvent","WheelEvent","InputEvent","KeyboardEvent","CompositionEvent","TouchList","TouchEvent","Touch"],
+      "CSSOM": e => e.match(/^CSS/),
+      "window propertys and methods": ["window", "self", "document", "name", "location", "history", "customElements", "locationbar", "menubar", " personalbar", "scrollbars", "statusbar", "toolbar", "status", "close", "closed", "stop", "focus", " blur", "frames", "length", "top","alert", "confirm", "prompt", "print","opener", "parent", "frameElement", "open", "navigator", "applicationCache", "postMessage"]
+    }
+
+    function filterWith (rule) {
+      let set = new Set(rule);
+      const rest = names.filter(e => !set.has(e));
+      const matches = names.filter(e => set.has(e));
+      return [matches, rest]
+    }
+
+    function filterWithFn (fn) {
+      const rest= []
+      const matches= []
+      names.forEach(e => {
+        fn(e) ? matches.push(e):rest.push(e)
+      })
+      return [matches, rest]
+    }
+
+    let rest= []
+    let matches= []
+    for(let [title, rule] of Object.entries(rules)) {
+      if(typeof rule === 'function') {
+        [matches, rest] = filterWithFn(rule)
+      }else {
+        [matches, rest] = filterWith(rule)
+      }
+      names = rest
+      console.log(title,matches)
+    }
+    console.log('rest:',rest.length, rest);
+  </script>
+</body>
+</html>
