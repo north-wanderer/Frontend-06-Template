@@ -17,7 +17,6 @@ class Carousel extends Component{
   }
   render() {
     this.root = document.createElement('div')
-    const { children } = this.root
 
     this.root.classList.add('carousel')
     for (let record of this.attributes.src) {
@@ -28,24 +27,36 @@ class Carousel extends Component{
 
     let position = 0
     this.root.addEventListener('mousedown', (event) => {
+      const { children } = this.root
       let startX = event.clientX
+
       let move = (event) => {
         let x = event.clientX - startX
-        for (const child of children) {
-          child.style.transform = `translateX(${-500 * position + x}px)`
-          child.style.transition = 'none'
+        let current = position - ((x - x % 500) / 500)
+        for (const offset of [-1, 0, 1]) {
+          let pos = current + offset
+          pos = (pos + children.length) % children.length
+          children[pos].style.transform = `translateX(${-pos * 500 + offset * 500 + x % 500}px)`
+          children[pos].style.transition = 'none'
         }
       }
+
       let up = event => {
         let x = event.clientX - startX
         position = position - Math.round(x / 500)
-        for (const child of children) {
-          child.style.transform = `translateX(${-500 * position}px)`
-          child.style.transition = 'none'
+        for (let offset of [0, -Math.sign(Math.round(x / 500) - x + 250 * Math.sign(x))]) {
+          let pos = position + offset
+          pos = (pos + children.length) % children.length
+          if (offset === 0) {
+            position = pos;
+          }
+          children[pos].style.transform = `translateX(${-position * 500 + offset * 500}px)`
+          children[pos].style.transition = ''
         }
         document.removeEventListener('mousemove', move)
         document.removeEventListener('mouseup', up)
       }
+
       document.addEventListener('mousemove', move)
       document.addEventListener('mouseup', up)
     })
