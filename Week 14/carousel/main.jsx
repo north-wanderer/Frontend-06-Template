@@ -17,19 +17,32 @@ class Carousel extends Component{
   }
   render() {
     this.root = document.createElement('div')
+    const { children } = this.root
+
     this.root.classList.add('carousel')
     for (let record of this.attributes.src) {
       let child = document.createElement('div')
       child.style.backgroundImage = `url(${record})`
       this.root.appendChild(child)
     }
+
+    let position = 0
     this.root.addEventListener('mousedown', (event) => {
-      console.log('mouse-down');
+      let startX = event.clientX
       let move = (event) => {
-        console.log('mouse-move');
+        let x = event.clientX - startX
+        for (const child of children) {
+          child.style.transform = `translateX(${-500 * position + x}px)`
+          child.style.transition = 'none'
+        }
       }
       let up = event => {
-        console.log('mouse-up');
+        let x = event.clientX - startX
+        position = position - Math.round(x / 500)
+        for (const child of children) {
+          child.style.transform = `translateX(${-500 * position}px)`
+          child.style.transition = 'none'
+        }
         document.removeEventListener('mousemove', move)
         document.removeEventListener('mouseup', up)
       }
