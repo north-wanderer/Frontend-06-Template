@@ -30,13 +30,13 @@ function getToken(code, cb) {
   req.end()
 }
 
-function pulish(req, res) {
-  let query = qs.parse(req.url.match(/^\/pulish\?([\s\S]+)$/)[1])
+function publish(req, res) {
+  let query = qs.parse(req.url.match(/^\/publish\?([\s\S]+)$/)[1])
   getUser(query.token, info => {
-    if (info.login === 'castle_of_daugulas@pm.me') {
+    if (info.login === 'north-wanderer') {
       req.pipe(unzipper.Extract({ path: '../server/public/' }))
-      req.on('end', () => {
-        req.end('success')
+      req.on('end', function () {
+        res.end('success')
       })
     }
   })
@@ -45,9 +45,13 @@ function pulish(req, res) {
 function getUser(token, cb) {
   let req = https.request({
     hostname: 'api.github.com',
-    path: 'user',
+    path: '/user',
     port: 443,
-    method: 'GET'
+    method: 'GET',
+    headers: {
+      Authorization: `token ${token}`,
+      'User-Agent': 'toy-publish'
+    }
   }, function (res) {
     let body = ''
     res.on('data', chunk => {
@@ -62,5 +66,5 @@ function getUser(token, cb) {
 
 http.createServer(function (req, res) {
   if (req.url.match(/^\/auth\?/)) return auth(req, res)
-  if (req.url.match(/^\/pulish\?/)) return pulish(req, res)
+  if (req.url.match(/^\/publish\?/)) return publish(req, res)
 }).listen('8082')

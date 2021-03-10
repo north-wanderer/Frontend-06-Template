@@ -1,5 +1,6 @@
 dependencies:
   archiver: 5.3.0
+  unzipper: 0.10.11
 lockfileVersion: 5.2
 packages:
   /archiver-utils/2.1.0:
@@ -50,6 +51,21 @@ packages:
     resolution:
       integrity: sha1-GxtEAWClv3rUC2UPCVljSBkDkwo=
       tarball: base64-js/download/base64-js-1.5.1.tgz
+  /big-integer/1.6.48:
+    dev: false
+    engines:
+      node: '>=0.6'
+    resolution:
+      integrity: sha1-j9iL0WMsukocjD49cVnwi7lbS54=
+      tarball: big-integer/download/big-integer-1.6.48.tgz
+  /binary/0.3.0:
+    dependencies:
+      buffers: 0.1.1
+      chainsaw: 0.1.0
+    dev: false
+    resolution:
+      integrity: sha1-n2BVO8XOjDOG87VTz/R0Yq3sqnk=
+      tarball: binary/download/binary-0.3.0.tgz
   /bl/4.1.0:
     dependencies:
       buffer: 5.7.1
@@ -59,6 +75,11 @@ packages:
     resolution:
       integrity: sha1-RRU1JkGCvsL7vIOmKrmM8R2fezo=
       tarball: bl/download/bl-4.1.0.tgz
+  /bluebird/3.4.7:
+    dev: false
+    resolution:
+      integrity: sha1-9y12C+Cbf3bQjtj66Ysomo0F+rM=
+      tarball: bluebird/download/bluebird-3.4.7.tgz
   /brace-expansion/1.1.11:
     dependencies:
       balanced-match: 1.0.0
@@ -72,6 +93,13 @@ packages:
     resolution:
       integrity: sha1-DTM+PwDqxQqhRUq9MO+MKl2ackI=
       tarball: buffer-crc32/download/buffer-crc32-0.2.13.tgz
+  /buffer-indexof-polyfill/1.0.2:
+    dev: false
+    engines:
+      node: '>=0.10'
+    resolution:
+      integrity: sha1-0nMhNcWZnGSyd/z5savjSYJUcpw=
+      tarball: buffer-indexof-polyfill/download/buffer-indexof-polyfill-1.0.2.tgz
   /buffer/5.7.1:
     dependencies:
       base64-js: 1.5.1
@@ -80,6 +108,20 @@ packages:
     resolution:
       integrity: sha1-umLnwTEzBTWCGXFghRqPZI6Z7tA=
       tarball: buffer/download/buffer-5.7.1.tgz
+  /buffers/0.1.1:
+    dev: false
+    engines:
+      node: '>=0.2.0'
+    resolution:
+      integrity: sha1-skV5w77U1tOWru5tmorn9Ugqt7s=
+      tarball: buffers/download/buffers-0.1.1.tgz
+  /chainsaw/0.1.0:
+    dependencies:
+      traverse: 0.3.9
+    dev: false
+    resolution:
+      integrity: sha1-XqtQsor+WAdNDVgpE4iCi15fvJg=
+      tarball: chainsaw/download/chainsaw-0.1.0.tgz
   /compress-commons/4.1.0:
     dependencies:
       buffer-crc32: 0.2.13
@@ -123,6 +165,13 @@ packages:
     resolution:
       integrity: sha1-ySKtIrODlavp04cPAvqBNO1wkAc=
       tarball: crc32-stream/download/crc32-stream-4.0.2.tgz
+  /duplexer2/0.1.4:
+    dependencies:
+      readable-stream: 2.3.7
+    dev: false
+    resolution:
+      integrity: sha1-ixLauHjA1p4+eJEFFmKjL8a93ME=
+      tarball: duplexer2/download/duplexer2-0.1.4.tgz
   /end-of-stream/1.4.4:
     dependencies:
       once: 1.4.0
@@ -147,6 +196,18 @@ packages:
     resolution:
       integrity: sha1-FQStJSMVjKpA20onh8sBQRmU6k8=
       tarball: fs.realpath/download/fs.realpath-1.0.0.tgz
+  /fstream/1.0.12:
+    dependencies:
+      graceful-fs: 4.2.6
+      inherits: 2.0.4
+      mkdirp: 0.5.5
+      rimraf: 2.7.1
+    dev: false
+    engines:
+      node: '>=0.6'
+    resolution:
+      integrity: sha1-Touo7i1Ivk99DeUFRVVI6uWTIEU=
+      tarball: fstream/download/fstream-1.0.12.tgz
   /glob/7.1.6:
     dependencies:
       fs.realpath: 1.0.0
@@ -196,6 +257,11 @@ packages:
     resolution:
       integrity: sha1-9plf4PggOS9hOWvolGJAe7dxaOQ=
       tarball: lazystream/download/lazystream-1.0.0.tgz
+  /listenercount/1.0.1:
+    dev: false
+    resolution:
+      integrity: sha1-hMinKrWcRyUyFIDJdeZQg0LnCTc=
+      tarball: listenercount/download/listenercount-1.0.1.tgz
   /lodash.defaults/4.2.0:
     dev: false
     resolution:
@@ -228,6 +294,19 @@ packages:
     resolution:
       integrity: sha1-UWbihkV/AzBgZL5Ul+jbsMPTIIM=
       tarball: minimatch/download/minimatch-3.0.4.tgz
+  /minimist/1.2.5:
+    dev: false
+    resolution:
+      integrity: sha1-Z9ZgFLZqaoqqDAg8X9WN9OTpdgI=
+      tarball: minimist/download/minimist-1.2.5.tgz
+  /mkdirp/0.5.5:
+    dependencies:
+      minimist: 1.2.5
+    dev: false
+    hasBin: true
+    resolution:
+      integrity: sha1-2Rzv1i0UNsoPQWIOJRKI1CAJne8=
+      tarball: mkdirp/download/mkdirp-0.5.5.tgz
   /normalize-path/3.0.0:
     dev: false
     engines:
@@ -293,6 +372,14 @@ packages:
     resolution:
       integrity: sha1-8OELt797+n4K3Yuv/cVMP32+5sQ=
       tarball: readdir-glob/download/readdir-glob-1.1.1.tgz
+  /rimraf/2.7.1:
+    dependencies:
+      glob: 7.1.6
+    dev: false
+    hasBin: true
+    resolution:
+      integrity: sha1-NXl/E6f9rcVmFCwp1PB8ytSD4+w=
+      tarball: rimraf/download/rimraf-2.7.1.tgz?cache=0&sync_timestamp=1604308910029&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Frimraf%2Fdownload%2Frimraf-2.7.1.tgz
   /safe-buffer/5.1.2:
     dev: false
     resolution:
@@ -303,6 +390,11 @@ packages:
     resolution:
       integrity: sha1-Hq+fqb2x/dTsdfWPnNtOa3gn7sY=
       tarball: safe-buffer/download/safe-buffer-5.2.1.tgz
+  /setimmediate/1.0.5:
+    dev: false
+    resolution:
+      integrity: sha1-KQy7Iy4waULX1+qbg3Mqt4VvgoU=
+      tarball: setimmediate/download/setimmediate-1.0.5.tgz
   /string_decoder/1.1.1:
     dependencies:
       safe-buffer: 5.1.2
@@ -330,6 +422,27 @@ packages:
     resolution:
       integrity: sha1-rK2EwoQTawYNw/qmRHSqmuvXcoc=
       tarball: tar-stream/download/tar-stream-2.2.0.tgz
+  /traverse/0.3.9:
+    dev: false
+    resolution:
+      integrity: sha1-cXuPIgzAu3tE5AUUwisui7xw2Lk=
+      tarball: traverse/download/traverse-0.3.9.tgz
+  /unzipper/0.10.11:
+    dependencies:
+      big-integer: 1.6.48
+      binary: 0.3.0
+      bluebird: 3.4.7
+      buffer-indexof-polyfill: 1.0.2
+      duplexer2: 0.1.4
+      fstream: 1.0.12
+      graceful-fs: 4.2.6
+      listenercount: 1.0.1
+      readable-stream: 2.3.7
+      setimmediate: 1.0.5
+    dev: false
+    resolution:
+      integrity: sha1-C0mRRGRyy9uS7nQDkJ8mwkGceC4=
+      tarball: unzipper/download/unzipper-0.10.11.tgz
   /util-deprecate/1.0.2:
     dev: false
     resolution:
@@ -353,3 +466,4 @@ packages:
       tarball: zip-stream/download/zip-stream-4.1.0.tgz
 specifiers:
   archiver: ^5.3.0
+  unzipper: ^0.10.11
