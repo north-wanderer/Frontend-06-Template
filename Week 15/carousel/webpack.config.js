@@ -1,6 +1,7 @@
 module.exports = {
   mode:'development',
-  entry: './main.jsx',
+  entry: './test.js',
+  // entry: './main.jsx',
   module: {
     rules: [
       {

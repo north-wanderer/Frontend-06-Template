@@ -1,6 +1,6 @@
 export function createElement(type, attributes, ...children) {
   let ele
-  console.log(typeof type);
+  // console.log(typeof type);
   if (typeof type === 'string') {
     ele = new ElementWarpper(type)
   } else { 
