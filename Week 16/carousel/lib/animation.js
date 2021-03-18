@@ -1,6 +1,6 @@
-const TICK = Symbol('tick') // 定义外部不能访问的变量
+const TICK = Symbol('tick')
 const TICK_HANDLER = Symbol('tick-handler')
-const ANIMATION = Symbol('animation')
+const ANIMATIONS = Symbol('animations')
 const START_TIME = Symbol('start-time')
 
 const PAUSE_START = Symbol('pause-start')
@@ -9,7 +9,7 @@ const PAUSE_TIME = Symbol('pause-time')
 export class TimeLine {
   constructor () {
     this.state = 'Inited'
-    this[ANIMATION] = new Set()
+    this[ANIMATIONS] = new Set()
     this[START_TIME] = new Map()
     this[PAUSE_TIME] = 0
   }
@@ -23,13 +23,13 @@ export class TimeLine {
     this[TICK] = () => {
       const now = Date.now()
 
-      for (const animation of this[ANIMATION]) {
+      for (const animation of this[ANIMATIONS]) {
         let t
 
         if (this[START_TIME].get(animation) < startTime) { t = now - startTime - this[PAUSE_TIME] - animation.delay } else { t = now - this[START_TIME].get(animation) - this[PAUSE_TIME] - animation.delay }
 
         if (animation.duration < t) {
-          this[ANIMATION].delete(animation)
+          this[ANIMATIONS].delete(animation)
           t = animation.duration
         }
 
@@ -60,7 +60,7 @@ export class TimeLine {
   reset () {
     this.pause()
     this.state = 'Inited'
-    this[ANIMATION] = new Set()
+    this[ANIMATIONS] = new Set()
     this[START_TIME] = new Map()
     this[PAUSE_TIME] = 0
     this[PAUSE_START] = 0
@@ -72,7 +72,7 @@ export class TimeLine {
       startTime = Date.now()
     }
 
-    this[ANIMATION].add(animation)
+    this[ANIMATIONS].add(animation)
     this[START_TIME].set(animation, startTime)
   }
 }
