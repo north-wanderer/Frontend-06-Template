@@ -1,46 +1,64 @@
-export function createElement(type, attributes, ...children) {
-  let ele
-  // console.log(typeof type);
-  if (typeof type === 'string') {
-    ele = new ElementWarpper(type)
-  } else { 
-    ele = new type
+export function createElement (type, attibutes, ...children) {
+  let element
+  if (typeof type === 'string') { element = new ElementWrapper(type) } else { element = new type() }
+
+  for (const name in attibutes) {
+    element.setAttribute(name, attibutes[name])
   }
-  for (const name in attributes) { 
-    ele.setAttribute(name, attributes[name])
-  }
-  for (const child of children) { 
+
+  for (let child of children) {
     if (typeof child === 'string') {
-      child = new TextWarpper(child)
+      child = new TextWrapper(child)
     }
-    ele.appendChild(child)
+    element.appendChild(child)
   }
-  return ele
+  return element
 }
+
+export const STATE = Symbol('state') // 成员变量
+export const ATTRIBUTE = Symbol('attribute') // 成员变量
 
 export class Component {
-  constructor(type) { 
-    // this.root = this.render()
+  constructor (type) {
+    console.log('Component.constructor')
+    this[ATTRIBUTE] = Object.create(null)
+    this[STATE] = Object.create(null)
   }
-  setAttribute(name,value) {
-    this.root.setAttribute(name,value)
-   }
-  appendChild(child) { 
+
+  setAttribute (name, value) {
+    this[ATTRIBUTE][name] = value
+  }
+
+  appendChild (child) {
     child.mountTo(this.root)
   }
-  mountTo(parent) { 
+
+  mountTo (parent) {
+    if (!this.root) {
+      this.render()
+    }
     parent.appendChild(this.root)
   }
-}
 
-class ElementWarpper extends Component{ 
-  constructor(type) { 
-    this.root = document.createElement(type)
+  triggerEvent (type, args) {
+    this[ATTRIBUTE]['on' + type.replace(/^[\s\S]/, s => s.toUpperCase())](new CustomEvent(type, { detail: args }))
   }
 }
 
-class TextWarpper extends Component{ 
-  constructor(content) { 
+class ElementWrapper extends Component {
+  constructor (type) {
+    super()
+    this.root = document.createElement(type)
+  }
+
+  setAttribute (name, value) {
+    this.root.setAttribute(name, value)
+  }
+}
+
+class TextWrapper extends Component {
+  constructor (content) {
+    super()
     this.root = document.createTextNode(content)
   }
 }

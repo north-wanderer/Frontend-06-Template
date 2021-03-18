@@ -1,7 +1,7 @@
 module.exports = {
   mode:'development',
-  entry: './test.js',
-  // entry: './main.jsx',
+  // entry: './test.js',
+  entry: './src/main.jsx',
   module: {
     rules: [
       {
@@ -15,5 +15,10 @@ module.exports = {
         }
       }
     ]
-  }
+  },
+  devtool: 'inline-source-map',
+  devServer: {
+    contentBase: './',
+    port: 3000
+  },
 }
