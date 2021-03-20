@@ -59,7 +59,51 @@ ${this.bodyText}`
     })
   }
 }
+class ChunkedBodyParser {
+  constructor () {
+    this.WAITING_LENGTH = 0
+    this.WAITING_LENGTH_LINE_END = 1
+    this.READING_CHUNK = 2
+    this.WAITING_NEW_LINE = 3
+    this.WAITING_NEW_LINE_END = 4
+    this.length = 0
+    this.content = []
+    this.isFinished = false
+    this.current = this.WAITING_LENGTH
+  }
 
+  receiveChar (char) {
+    if (this.current === this.WAITING_LENGTH) {
+      if (char === '\r') {
+        if (this.length === 0) {
+          this.isFinished = true
+        }
+        this.current = this.WAITING_LENGTH_LINE_END
+      } else {
+        this.length *= 16 // chunked返回的第一个是16进制的长度数字,所以在接收新的长度字符时，需要把已有的左移1位，也就是乘以16
+        this.length += parseInt(char, 16) // 把新读入的16进制长度加上
+      }
+    } else if (this.current === this.WAITING_LENGTH_LINE_END) {
+      if (char === '\n') {
+        this.current = this.READING_CHUNK
+      }
+    } else if (this.current === this.READING_CHUNK) {
+      this.content.push(char)
+      this.length--
+      if (this.length === 0) {
+        this.current = this.WAITING_NEW_LINE
+      }
+    } else if (this.current === this.WAITING_NEW_LINE) {
+      if (char === '\r') {
+        this.current = this.WAITING_NEW_LINE_END
+      }
+    } else if (this.current === this.WAITING_NEW_LINE_END) {
+      if (char === '\n') {
+        this.current = this.WAITING_LENGTH
+      }
+    }
+  }
+}
 class ResponseParser {
   constructor () {
     this.WAITING_STATUS_LINE = 0
@@ -145,52 +189,6 @@ class ResponseParser {
     } else if (this.current === this.WAITING_BODY) {
       // bodyParser 处理 body
       this.bodyParser.receiveChar(char)
-    }
-  }
-}
-
-class ChunkedBodyParser {
-  constructor () {
-    this.WAITING_LENGTH = 0
-    this.WAITING_LENGTH_LINE_END = 1
-    this.READING_CHUNK = 2
-    this.WAITING_NEW_LINE = 3
-    this.WAITING_NEW_LINE_END = 4
-    this.length = 0
-    this.content = []
-    this.isFinished = false
-    this.current = this.WAITING_LENGTH
-  }
-
-  receiveChar (char) {
-    if (this.current === this.WAITING_LENGTH) {
-      if (char === '\r') {
-        if (this.length === 0) {
-          this.isFinished = true
-        }
-        this.current = this.WAITING_LENGTH_LINE_END
-      } else {
-        this.length *= 16 // chunked返回的第一个是16进制的长度数字,所以在接收新的长度字符时，需要把已有的左移1位，也就是乘以16
-        this.length += parseInt(char, 16) // 把新读入的16进制长度加上
-      }
-    } else if (this.current === this.WAITING_LENGTH_LINE_END) {
-      if (char === '\n') {
-        this.current = this.READING_CHUNK
-      }
-    } else if (this.current === this.READING_CHUNK) {
-      this.content.push(char)
-      this.length--
-      if (this.length === 0) {
-        this.current = this.WAITING_NEW_LINE
-      }
-    } else if (this.current === this.WAITING_NEW_LINE) {
-      if (char === '\r') {
-        this.current = this.WAITING_NEW_LINE_END
-      }
-    } else if (this.current === this.WAITING_NEW_LINE_END) {
-      if (char === '\n') {
-        this.current = this.WAITING_LENGTH
-      }
     }
   }
 }
