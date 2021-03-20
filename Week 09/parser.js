@@ -13,7 +13,7 @@ function addCSSRules (text) {
 }
 
 function match (element, selector) {
-  // 没有属性的都是文本节点，需要计算css
+  // 没有属性的都是文本节点，不需要计算css
   if (!selector || !element.attributes) return false
 
   if (selector.charAt(0) === '#') { // ID
