@@ -1,5 +1,6 @@
 /* eslint-disable no-empty */
 const css = require('css')
+const layout = require('./layout')
 let currentToken = null
 let currentAttribute = null
 let currentTextNode = null
@@ -12,8 +13,9 @@ function addCSSRules (text) {
   rules.push(...ast.stylesheet.rules)
 }
 
+// 没有处理复合选择器
 function match (element, selector) {
-  // 没有属性的都是文本节点，需要计算css
+  // 没有属性的都是文本节点，不需要计算css
   if (!selector || !element.attributes) return false
 
   if (selector.charAt(0) === '#') { // ID
@@ -128,6 +130,7 @@ function emit (token) {
       if (top.tagName === 'style') {
         addCSSRules(top.children[0].content)
       }
+      layout(top)
       stack.pop() // 配对成功，把元素从栈里取出
     }
     currentTextNode = null

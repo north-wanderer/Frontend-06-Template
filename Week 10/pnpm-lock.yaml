@@ -1,0 +1,58 @@
+dependencies:
+  css: 3.0.0
+  images: 3.2.3
+lockfileVersion: 5.2
+packages:
+  /atob/2.1.2:
+    dev: false
+    engines:
+      node: '>= 4.5.0'
+    hasBin: true
+    resolution:
+      integrity: sha1-bZUX654DDSQ2ZmZR6GvZ9vE1M8k=
+      tarball: atob/download/atob-2.1.2.tgz
+  /css/3.0.0:
+    dependencies:
+      inherits: 2.0.4
+      source-map: 0.6.1
+      source-map-resolve: 0.6.0
+    dev: false
+    resolution:
+      integrity: sha1-REek1Y/dAzZ8UWyp9krjZc7kql0=
+      tarball: css/download/css-3.0.0.tgz
+  /decode-uri-component/0.2.0:
+    dev: false
+    engines:
+      node: '>=0.10'
+    resolution:
+      integrity: sha1-6zkTMzRYd1y4TNGh+uBiEGu4dUU=
+      tarball: decode-uri-component/download/decode-uri-component-0.2.0.tgz
+  /images/3.2.3:
+    dev: false
+    requiresBuild: true
+    resolution:
+      integrity: sha1-joZCHfFj2bOmDuTR3HzYIF8tK9c=
+      tarball: images/download/images-3.2.3.tgz
+  /inherits/2.0.4:
+    dev: false
+    resolution:
+      integrity: sha1-D6LGT5MpF8NDOg3tVTY6rjdBa3w=
+      tarball: inherits/download/inherits-2.0.4.tgz
+  /source-map-resolve/0.6.0:
+    dependencies:
+      atob: 2.1.2
+      decode-uri-component: 0.2.0
+    dev: false
+    resolution:
+      integrity: sha1-PZ34fiNrU/FtAeWBUPx3EROOXtI=
+      tarball: source-map-resolve/download/source-map-resolve-0.6.0.tgz
+  /source-map/0.6.1:
+    dev: false
+    engines:
+      node: '>=0.10.0'
+    resolution:
+      integrity: sha1-dHIq8y6WFOnCh6jQu95IteLxomM=
+      tarball: source-map/download/source-map-0.6.1.tgz
+specifiers:
+  css: ^3.0.0
+  images: ^3.2.3
