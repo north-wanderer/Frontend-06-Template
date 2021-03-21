@@ -1,0 +1,15 @@
+{
+  "name": "git-hooks",
+  "version": "1.0.0",
+  "description": "yo4",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^7.22.0"
+  }
+}
